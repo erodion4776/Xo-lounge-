@@ -1,0 +1,18 @@
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# Next.js
+/.next/
+/out/
+/coverage
+
+# Environment variables
+.env.local
+.env.development.local
+.env.production.local
+
+# Supabase
+# If you generate types, ensure the output file is here if not in a designated folder:
+# lib/supabase/database.types.ts
