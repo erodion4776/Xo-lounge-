@@ -1,34 +1,475 @@
-/*
-  This file imports the base layers for Tailwind CSS.
-  Next.js ensures this file is included in your application's bundle.
+/* 
+  ============================================
+  Base Tailwind CSS Layers
+  ============================================
 */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* 
-  OPTIONAL: You can add custom global styles here,
-  but for a Tailwind-first approach, try to use utility classes.
-
-  Example to ensure all links have a transition:
+  ============================================
+  CSS Custom Properties (Design Tokens)
+  ============================================
 */
-a {
-  transition: color 0.2s ease-in-out;
+@layer base {
+  :root {
+    /* Color Palette */
+    --color-dark-bg: 18 18 18; /* #121212 */
+    --color-dark-card: 30 30 30; /* #1e1e1e */
+    --color-dark-hover: 40 40 40; /* #282828 */
+    --color-gold-dark: 184 134 11; /* #B8860B */
+    --color-gold-accent: 255 215 0; /* #FFD700 */
+    --color-gold-light: 255 223 107; /* #FFDF6B */
+    
+    /* Spacing */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    
+    /* Border Radius */
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+    
+    /* Transitions */
+    --transition-fast: 150ms;
+    --transition-base: 200ms;
+    --transition-slow: 300ms;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+  }
 }
 
-/*
-  OPTIONAL: Custom scrollbar styling for a dark theme aesthetic (mostly webkit browsers)
+/* 
+  ============================================
+  Base Styles & CSS Reset Enhancements
+  ============================================
 */
-body::-webkit-scrollbar {
-  width: 8px;
+@layer base {
+  /* Smooth scrolling for the entire page */
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Base body styles */
+  body {
+    @apply bg-dark-bg text-gray-100;
+    font-feature-settings: "kern" 1;
+    font-kerning: normal;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Focus visible styles for accessibility */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-gold-accent ring-offset-2 ring-offset-dark-bg rounded;
+  }
+
+  /* Selection styles */
+  ::selection {
+    @apply bg-gold-accent/30 text-gold-light;
+  }
+
+  ::-moz-selection {
+    @apply bg-gold-accent/30 text-gold-light;
+  }
+
+  /* Heading styles */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight;
+  }
+
+  h1 {
+    @apply text-4xl sm:text-5xl;
+  }
+
+  h2 {
+    @apply text-3xl sm:text-4xl;
+  }
+
+  h3 {
+    @apply text-2xl sm:text-3xl;
+  }
+
+  h4 {
+    @apply text-xl sm:text-2xl;
+  }
+
+  h5 {
+    @apply text-lg sm:text-xl;
+  }
+
+  h6 {
+    @apply text-base sm:text-lg;
+  }
+
+  /* Link styles */
+  a {
+    @apply transition-all duration-200 ease-in-out;
+  }
+
+  a:not(.btn):hover {
+    @apply text-gold-accent;
+  }
+
+  /* Form element resets */
+  input,
+  textarea,
+  select,
+  button {
+    @apply transition-all duration-200;
+  }
+
+  /* Disabled state */
+  [disabled] {
+    @apply cursor-not-allowed opacity-50;
+  }
+
+  /* Code blocks */
+  pre {
+    @apply overflow-x-auto rounded-lg;
+  }
+
+  code {
+    @apply text-sm font-mono;
+  }
+
+  /* Table styles */
+  table {
+    @apply w-full border-collapse;
+  }
+
+  th {
+    @apply font-semibold text-left;
+  }
 }
-body::-webkit-scrollbar-track {
-  background: #1e1e1e; /* dark-card */
+
+/* 
+  ============================================
+  Custom Scrollbar Styles
+  ============================================
+*/
+@layer utilities {
+  /* Webkit browsers scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-dark-card;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-600;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gold-dark;
+  }
+
+  ::-webkit-scrollbar-thumb:active {
+    @apply bg-gold-accent;
+  }
+
+  /* Firefox scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(75 85 99) rgb(30 30 30);
+  }
+
+  *:hover {
+    scrollbar-color: rgb(184 134 11) rgb(30 30 30);
+  }
 }
-body::-webkit-scrollbar-thumb {
-  background: #444444;
-  border-radius: 4px;
+
+/* 
+  ============================================
+  Component Classes
+  ============================================
+*/
+@layer components {
+  /* Button base styles */
+  .btn {
+    @apply px-4 py-2 font-medium rounded-lg transition-all duration-200 
+           focus:outline-none focus:ring-2 focus:ring-offset-2 
+           focus:ring-offset-dark-bg disabled:opacity-50 
+           disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply bg-gold-accent text-dark-bg hover:bg-gold-accent/90 
+           focus:ring-gold-accent active:scale-[0.98];
+  }
+
+  .btn-secondary {
+    @apply bg-dark-card text-gold-light border border-gold-dark/50 
+           hover:bg-dark-hover hover:border-gold-accent 
+           focus:ring-gold-dark;
+  }
+
+  /* Card component */
+  .card {
+    @apply bg-dark-card rounded-xl shadow-xl border border-gold-dark/20 
+           backdrop-blur-sm;
+  }
+
+  /* Input styles */
+  .input {
+    @apply w-full px-4 py-2 bg-dark-bg border border-gold-dark/30 
+           rounded-lg text-gray-100 placeholder-gray-500
+           focus:border-gold-accent focus:ring-2 focus:ring-gold-accent/20 
+           focus:outline-none transition-all duration-200;
+  }
+
+  /* Badge styles */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full 
+           text-xs font-medium;
+  }
+
+  .badge-gold {
+    @apply bg-gold-dark/20 text-gold-light border border-gold-dark/50;
+  }
+
+  /* Container with max width */
+  .container-max {
+    @apply w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
 }
-body::-webkit-scrollbar-thumb:hover {
-  background: #B8860B; /* gold-dark */
+
+/* 
+  ============================================
+  Utility Classes
+  ============================================
+*/
+@layer utilities {
+  /* Text gradient */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r 
+           from-gold-dark via-gold-accent to-gold-light;
+  }
+
+  /* Glassmorphism effect */
+  .glass {
+    @apply bg-dark-card/50 backdrop-blur-md border border-gold-dark/20;
+  }
+
+  /* Hover lift effect */
+  .hover-lift {
+    @apply transition-transform duration-200 hover:-translate-y-1;
+  }
+
+  /* Glow effect */
+  .glow-gold {
+    @apply shadow-[0_0_20px_rgba(255,215,0,0.3)];
+  }
+
+  /* Loading spinner */
+  .spinner {
+    @apply animate-spin rounded-full border-4 border-gold-accent 
+           border-t-transparent;
+  }
+
+  /* Skeleton loader */
+  .skeleton {
+    @apply animate-pulse bg-gradient-to-r from-dark-card via-gray-800 
+           to-dark-card bg-[length:200%_100%];
+  }
+
+  /* Divider */
+  .divider {
+    @apply w-full h-px bg-gradient-to-r from-transparent 
+           via-gold-dark/50 to-transparent;
+  }
+
+  /* Hide scrollbar but keep functionality */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Safe area padding for mobile devices */
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-left {
+    padding-left: env(safe-area-inset-left);
+  }
+
+  .safe-right {
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* 
+  ============================================
+  Animation Classes
+  ============================================
+*/
+@layer utilities {
+  /* Fade animations */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  .animate-fadeInUp {
+    animation: fadeInUp 0.3s ease-in-out;
+  }
+
+  .animate-slideInRight {
+    animation: slideInRight 0.3s ease-in-out;
+  }
+}
+
+/* 
+  ============================================
+  Print Styles
+  ============================================
+*/
+@media print {
+  /* Hide elements that shouldn't be printed */
+  .no-print {
+    display: none !important;
+  }
+
+  /* Reset colors for better printing */
+  body {
+    @apply bg-white text-black;
+  }
+
+  /* Ensure links are visible */
+  a[href]:after {
+    content: " (" attr(href) ")";
+  }
+}
+
+/* 
+  ============================================
+  Accessibility Enhancements
+  ============================================
+*/
+@layer utilities {
+  /* Screen reader only content */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  /* Show on focus for keyboard navigation */
+  .sr-only-focusable:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: inherit;
+    margin: inherit;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+
+  /* Reduce motion for users who prefer it */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    * {
+      border-width: 2px !important;
+    }
+    
+    .btn {
+      border: 2px solid currentColor !important;
+    }
+  }
+}
+
+/* 
+  ============================================
+  Dark Mode Enhancements
+  ============================================
+*/
+@media (prefers-color-scheme: dark) {
+  /* Already using dark theme by default */
+}
+
+/* 
+  ============================================
+  Custom Utility for Responsive Text
+  ============================================
+*/
+@layer utilities {
+  .text-responsive {
+    font-size: clamp(0.875rem, 2.5vw, 1rem);
+  }
+
+  .heading-responsive {
+    font-size: clamp(1.5rem, 5vw, 3rem);
+  }
 }
