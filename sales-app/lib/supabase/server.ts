@@ -1,8 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
-// import { Database } from './database.types'; 
+import { cookies } from 'next/headers'; // CRITICAL: This is where 'get' comes from
 
-// This client is safe to use in Server Components and Server Actions.
+// This client is used by all Server Components and Server Actions
 export const createClient = () => {
   const cookieStore = cookies();
 
@@ -11,14 +10,16 @@ export const createClient = () => {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get: (name: string) => cookieStore.get(name)?.value,
+        // Correct way to read the cookie store
+        get: (name: string) => cookieStore.get(name)?.value, 
+        
+        // Logic for setting/removing cookies in Server Actions
         set: (name: string, value: string, options: any) => {
-          // This ensures the server client can update cookies in Server Actions
           try {
             cookieStore.set({ name, value, ...options });
           } catch (error) {
-            // The `cookies().set()` can only be called in a Server Action or Route Handler.
-            // If called in a normal Server Component, we ignore the error.
+            // This is expected if 'set' is called in a read-only context (like a server component)
+            // We ignore it, as it will only truly work in Server Actions/Route Handlers.
           }
         },
         remove: (name: string, options: any) => {
