@@ -4,7 +4,7 @@
   
   # Next.js build output is automatically handled by the plugin, but explicitly setting this is often safer.
   # The actual publish directory will be a hidden Netlify folder managed by the plugin.
-  publish = "out" 
+  publish = "next" 
 
 [build.environment]
   # Force a modern Node version compatible with Next.js 14
