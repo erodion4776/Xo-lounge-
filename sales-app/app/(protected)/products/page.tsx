@@ -3,6 +3,7 @@ import { Product } from '@/types/db';
 import ProductForm from '@/components/ProductForm';
 import { deleteProduct } from '@/lib/actions';
 
+// This is a Server Component to fetch data
 export default async function ProductsPage() {
   const supabase = createClient();
   
@@ -10,12 +11,17 @@ export default async function ProductsPage() {
   const { data: products, error } = await supabase
     .from('products')
     .select('*')
-    .order('name');
+    .order('name')
+    .returns<Product[]>();
 
   if (error) {
     console.error('Error fetching products:', error);
     return <p className="text-red-500">Failed to load inventory data.</p>;
   }
+
+  // Bind the delete function to a server action for use in the form
+  // We cannot define this inside the loop, so we define a helper wrapper
+  // Note: deleteProduct is the Server Action from '@/lib/actions'
 
   return (
     <div className="space-y-8">
@@ -25,7 +31,6 @@ export default async function ProductsPage() {
         {/* Left Column: Add New Product Form */}
         <div className="lg:col-span-1 bg-dark-card p-6 rounded-xl border border-gold-dark/30 h-fit">
           <h3 className="text-xl font-bold text-gold-light mb-4">Add New Product</h3>
-          {/* ProductForm will handle insert and update logic */}
           <ProductForm /> 
         </div>
 
@@ -45,7 +50,10 @@ export default async function ProductsPage() {
               </thead>
               <tbody className="divide-y divide-gold-dark/20">
                 {products?.map((product: Product) => (
-                  <tr key={product.id} className={product.stock_quantity <= product.low_stock_alert ? 'bg-red-900/10' : 'hover:bg-dark-bg/50 transition-colors'}>
+                  <tr 
+                    key={product.id} 
+                    className={product.stock_quantity <= product.low_stock_alert ? 'bg-red-900/10' : 'hover:bg-dark-bg/50 transition-colors'}
+                  >
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gold-light">{product.name}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gold-light">
                       {product.stock_quantity}
@@ -53,10 +61,15 @@ export default async function ProductsPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gold-light">${product.sale_price.toFixed(2)}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      {/* THIS IS THE CORRECT SERVER ACTION BINDING */}
                       <form action={deleteProduct.bind(null, product.id)} className="inline-block">
-                        <button type="submit" className="text-red-500 hover:text-red-300 ml-4">Delete</button>
+                        <button 
+                            type="submit" 
+                            className="text-red-500 hover:text-red-300 ml-4 p-1 rounded-md"
+                        >
+                            Delete
+                        </button>
                       </form>
-                      {/* In a real app, you'd have an Edit button here that opens a modal with ProductForm */}
                     </td>
                   </tr>
                 ))}
