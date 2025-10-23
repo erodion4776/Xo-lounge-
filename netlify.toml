@@ -1,0 +1,16 @@
+[build]
+  command = "npm install && npm run build"
+  publish = ".next" # Tell Netlify where the build output is
+  
+[build.environment]
+  NODE_VERSION = "20"
+  
+[dev]
+  framework = "next"
+  publish = ".next"
+  
+# Optional: Set a redirect for the Next.js runtime (usually handled automatically, but safer to include)
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/___netlify-handler"
+  status = 200
