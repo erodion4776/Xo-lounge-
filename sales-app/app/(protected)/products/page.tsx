@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { Product } from '@/types/db';
 import ProductForm from '@/components/ProductForm';
-import { deleteProduct } from '@/lib/actions';
+import { DeleteButton } from '@/components/DeleteButton'; // Import the new component
 
 // This is a Server Component to fetch data
 export default async function ProductsPage() {
@@ -18,10 +18,6 @@ export default async function ProductsPage() {
     console.error('Error fetching products:', error);
     return <p className="text-red-500">Failed to load inventory data.</p>;
   }
-
-  // Bind the delete function to a server action for use in the form
-  // We cannot define this inside the loop, so we define a helper wrapper
-  // Note: deleteProduct is the Server Action from '@/lib/actions'
 
   return (
     <div className="space-y-8">
@@ -61,15 +57,8 @@ export default async function ProductsPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gold-light">${product.sale_price.toFixed(2)}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      {/* THIS IS THE CORRECT SERVER ACTION BINDING */}
-                      <form action={deleteProduct.bind(null, product.id)} className="inline-block">
-                        <button 
-                            type="submit" 
-                            className="text-red-500 hover:text-red-300 ml-4 p-1 rounded-md"
-                        >
-                            Delete
-                        </button>
-                      </form>
+                      {/* USE THE NEW CLIENT COMPONENT TO AVOID THE BINDING ERROR */}
+                      <DeleteButton productId={product.id} />
                     </td>
                   </tr>
                 ))}
